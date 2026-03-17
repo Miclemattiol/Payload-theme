@@ -7,6 +7,9 @@ import { fileURLToPath } from 'url'
 import config from '@/payload.config'
 import './styles.css'
 
+import { useTranslations } from 'next-intl' 
+import { getTranslations } from 'next-intl/server'
+
 export default async function HomePage() {
   const headers = await getHeaders()
   const payloadConfig = await config
@@ -14,6 +17,7 @@ export default async function HomePage() {
   const { user } = await payload.auth({ headers })
 
   const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
+  const t = await getTranslations('HomePage');
 
   return (
     <div className="home">
@@ -49,7 +53,7 @@ export default async function HomePage() {
         </div>
       </div>
       <div className="footer">
-        <p>Update this page by editing</p>
+        <p>{t('title')}</p>
         <a className="codeLink" href={fileURL}>
           <code>app/(frontend)/page.tsx</code>
         </a>
