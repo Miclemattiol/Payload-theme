@@ -5,7 +5,6 @@ import React from 'react'
 import { fileURLToPath } from 'url'
 
 import config from '@/payload.config'
-import './styles.css'
 
 import { useTranslations } from 'next-intl' 
 import { getTranslations } from 'next-intl/server'

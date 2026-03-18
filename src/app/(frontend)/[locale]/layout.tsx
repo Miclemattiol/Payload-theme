@@ -1,5 +1,5 @@
 import React from 'react'
-import './styles.css'
+import './styles.scss'
 import { RefreshRouteOnSave } from '@/utils/RefreshRouteOnSave'
 import { NextIntlClientProvider } from 'next-intl'
 
