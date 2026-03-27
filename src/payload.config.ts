@@ -11,6 +11,9 @@ import { Pages } from './collections/Pages'
 import { Header } from './globals/Header'
 import { routing } from './i18n/routing'
 import { Footer } from './globals/Footer'
+import { HeroBlock } from './blocks/Hero/config'
+import { MultiColumnBlock } from './blocks/MultiColumn/config'
+import { ImageWithTextBlock } from './blocks/ImageWithText/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -22,6 +25,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
+  blocks: [HeroBlock, ImageWithTextBlock, MultiColumnBlock],
   collections: [Users, Media, Pages],
   globals: [Header, Footer],
   editor: lexicalEditor(),
@@ -34,4 +38,8 @@ export default buildConfig({
   }),
   sharp,
   plugins: [],
+  localization: {
+    locales: [...routing.locales],
+    defaultLocale: routing.defaultLocale,
+  }
 })
