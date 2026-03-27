@@ -10,7 +10,7 @@ export const Pages: CollectionConfig = {
     useAsTitle: "title",
     livePreview: {
       url: ({ data, locale }) =>
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/${locale}/${data.slug ?? 'home'}?preview=true`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/preview?slug=${data.slug ?? 'home'}&locale=${locale}`,
     },
     
   },
@@ -37,6 +37,8 @@ export const Pages: CollectionConfig = {
     }  
   ],
   versions: {
-    drafts: true,
+    drafts: {
+      autosave: true,
+    },
   }
 }
