@@ -72,6 +72,7 @@ export interface Config {
   };
   collections: {
     users: User;
+    roles: Role;
     media: Media;
     pages: Page;
     'payload-kv': PayloadKv;
@@ -82,6 +83,7 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
+    roles: RolesSelect<false> | RolesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -193,6 +195,8 @@ export interface MultiColumnBlock {
  */
 export interface User {
   id: string;
+  isAdmin?: boolean | null;
+  roles?: (string | Role)[] | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -214,6 +218,23 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "roles".
+ */
+export interface Role {
+  id: string;
+  name: string;
+  permissions?:
+    | {
+        collection: 'admin-panel' | 'pages' | 'media' | 'users' | 'header' | 'footer';
+        operations: ('read' | 'create' | 'update' | 'delete')[];
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */
 export interface Page {
@@ -223,6 +244,7 @@ export interface Page {
   content?: (HeroBlock | ImageWithTextBlock | MultiColumnBlock)[] | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -251,6 +273,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: string | User;
+      } | null)
+    | ({
+        relationTo: 'roles';
+        value: string | Role;
       } | null)
     | ({
         relationTo: 'media';
@@ -307,6 +333,8 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  isAdmin?: T;
+  roles?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -323,6 +351,22 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "roles_select".
+ */
+export interface RolesSelect<T extends boolean = true> {
+  name?: T;
+  permissions?:
+    | T
+    | {
+        collection?: T;
+        operations?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -358,6 +402,7 @@ export interface PagesSelect<T extends boolean = true> {
       };
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

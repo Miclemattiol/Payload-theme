@@ -8,6 +8,7 @@ import sharp from 'sharp'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
+import { Roles } from './collections/Roles'
 import { Header } from './globals/Header'
 import { routing } from './i18n/routing'
 import { Footer } from './globals/Footer'
@@ -26,7 +27,7 @@ export default buildConfig({
     },
   },
   blocks: [HeroBlock, ImageWithTextBlock, MultiColumnBlock],
-  collections: [Users, Media, Pages],
+  collections: [Users, Roles, Media, Pages],
   globals: [Header, Footer],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
