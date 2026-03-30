@@ -1,14 +1,19 @@
 'use client'
 
 import { useField, FieldLabel } from '@payloadcms/ui'
-import { HexColorPicker } from 'react-colorful'
+import { HexAlphaColorPicker } from 'react-colorful'
 import { useEffect, useRef, useState } from 'react'
 import type { TextFieldClientProps } from 'payload'
 
 export const ColorPickerComponent: React.FC<TextFieldClientProps> = ({ field, path }) => {
   const { value, setValue } = useField<string>({ path })
+  const [localColor, setLocalColor] = useState<string>(value ?? '#ffffffff')
   const [isOpen, setIsOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (value && value !== localColor) setLocalColor(value)
+  }, [value])
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -32,15 +37,15 @@ export const ColorPickerComponent: React.FC<TextFieldClientProps> = ({ field, pa
             height: 32,
             borderRadius: 4,
             border: '1px solid var(--theme-elevation-150)',
-            background: value ?? '#ffffff',
+            background: localColor,
             cursor: 'pointer',
             flexShrink: 0,
           }}
         />
         <input
           type="text"
-          value={value ?? ''}
-          onChange={e => setValue(e.target.value)}
+          value={localColor}
+          onChange={e => { setLocalColor(e.target.value); setValue(e.target.value) }}
           placeholder="#000000"
           style={{
             flex: 1,
@@ -56,7 +61,10 @@ export const ColorPickerComponent: React.FC<TextFieldClientProps> = ({ field, pa
       </div>
       {isOpen && (
         <div style={{ position: 'absolute', zIndex: 100, marginTop: 4 }}>
-          <HexColorPicker color={value ?? '#ffffff'} onChange={setValue} />
+          <HexAlphaColorPicker
+            color={localColor}
+            onChange={(color: string) => { setLocalColor(color); setValue(color) }}
+          />
         </div>
       )}
     </div>
