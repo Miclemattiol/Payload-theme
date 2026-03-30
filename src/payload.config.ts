@@ -31,6 +31,8 @@ export default buildConfig({
   globals: [Header, Footer],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
+  cors: [process.env.NEXT_PUBLIC_SERVER_URL || ''].filter(Boolean),
+  csrf: [process.env.NEXT_PUBLIC_SERVER_URL || ''].filter(Boolean),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
