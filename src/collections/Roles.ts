@@ -5,9 +5,11 @@ const COLLECTION_OPTIONS = [
   { label: 'Admin Panel', value: 'admin-panel' },
   { label: 'Pages', value: 'pages' },
   { label: 'Media', value: 'media' },
+  { label: 'Fonts', value: 'fonts' },
   { label: 'Users', value: 'users' },
   { label: 'Header', value: 'header' },
   { label: 'Footer', value: 'footer' },
+  { label: 'Theme Settings', value: 'theme-settings' },
 ]
 
 const OPERATION_OPTIONS = [

@@ -73,6 +73,7 @@ export interface Config {
   collections: {
     users: User;
     roles: Role;
+    fonts: Font;
     media: Media;
     pages: Page;
     'payload-kv': PayloadKv;
@@ -84,6 +85,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     roles: RolesSelect<false> | RolesSelect<true>;
+    fonts: FontsSelect<false> | FontsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -98,10 +100,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    'theme-settings': ThemeSetting;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    'theme-settings': ThemeSettingsSelect<false> | ThemeSettingsSelect<true>;
   };
   locale: 'en' | 'it';
   widgets: {
@@ -267,13 +271,32 @@ export interface Role {
   name: string;
   permissions?:
     | {
-        collection: 'admin-panel' | 'pages' | 'media' | 'users' | 'header' | 'footer';
+        collection: 'admin-panel' | 'pages' | 'media' | 'fonts' | 'users' | 'header' | 'footer' | 'theme-settings';
         operations: ('read' | 'create' | 'update' | 'delete')[];
         id?: string | null;
       }[]
     | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "fonts".
+ */
+export interface Font {
+  id: string;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -320,6 +343,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'roles';
         value: string | Role;
+      } | null)
+    | ({
+        relationTo: 'fonts';
+        value: string | Font;
       } | null)
     | ({
         relationTo: 'media';
@@ -410,6 +437,24 @@ export interface RolesSelect<T extends boolean = true> {
       };
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "fonts_select".
+ */
+export interface FontsSelect<T extends boolean = true> {
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -602,6 +647,86 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "theme-settings".
+ */
+export interface ThemeSetting {
+  id: string;
+  colorsLight?: {
+    primary?: string | null;
+    secondary?: string | null;
+    background?: string | null;
+    surface?: string | null;
+    textPrimary?: string | null;
+    textSecondary?: string | null;
+    border?: string | null;
+  };
+  colorsDark?: {
+    primary?: string | null;
+    secondary?: string | null;
+    background?: string | null;
+    surface?: string | null;
+    textPrimary?: string | null;
+    textSecondary?: string | null;
+    border?: string | null;
+  };
+  heading?: {
+    source?: ('google' | 'custom') | null;
+    googleFamily?: string | null;
+    googleWeights?: ('100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900')[] | null;
+    customFile?: (string | null) | Font;
+  };
+  body?: {
+    source?: ('google' | 'custom') | null;
+    googleFamily?: string | null;
+    googleWeights?: ('100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900')[] | null;
+    customFile?: (string | null) | Font;
+  };
+  display?: {
+    source?: ('google' | 'custom') | null;
+    googleFamily?: string | null;
+    googleWeights?: ('100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900')[] | null;
+    customFile?: (string | null) | Font;
+  };
+  mono?: {
+    source?: ('google' | 'custom') | null;
+    googleFamily?: string | null;
+    googleWeights?: ('100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900')[] | null;
+    customFile?: (string | null) | Font;
+  };
+  accent?: {
+    source?: ('google' | 'custom') | null;
+    googleFamily?: string | null;
+    googleWeights?: ('100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900')[] | null;
+    customFile?: (string | null) | Font;
+  };
+  shape?: {
+    radiusSm?: number | null;
+    radiusMd?: number | null;
+    radiusLg?: number | null;
+    radiusXl?: number | null;
+  };
+  layout?: {
+    mobile?: {
+      contentWidth?: ('full' | 'centered') | null;
+      maxWidth?: number | null;
+      paddingX?: number | null;
+    };
+    tablet?: {
+      contentWidth?: ('full' | 'centered') | null;
+      maxWidth?: number | null;
+      paddingX?: number | null;
+    };
+    desktop?: {
+      contentWidth?: ('full' | 'centered') | null;
+      maxWidth?: number | null;
+      paddingX?: number | null;
+    };
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -614,6 +739,110 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "theme-settings_select".
+ */
+export interface ThemeSettingsSelect<T extends boolean = true> {
+  colorsLight?:
+    | T
+    | {
+        primary?: T;
+        secondary?: T;
+        background?: T;
+        surface?: T;
+        textPrimary?: T;
+        textSecondary?: T;
+        border?: T;
+      };
+  colorsDark?:
+    | T
+    | {
+        primary?: T;
+        secondary?: T;
+        background?: T;
+        surface?: T;
+        textPrimary?: T;
+        textSecondary?: T;
+        border?: T;
+      };
+  heading?:
+    | T
+    | {
+        source?: T;
+        googleFamily?: T;
+        googleWeights?: T;
+        customFile?: T;
+      };
+  body?:
+    | T
+    | {
+        source?: T;
+        googleFamily?: T;
+        googleWeights?: T;
+        customFile?: T;
+      };
+  display?:
+    | T
+    | {
+        source?: T;
+        googleFamily?: T;
+        googleWeights?: T;
+        customFile?: T;
+      };
+  mono?:
+    | T
+    | {
+        source?: T;
+        googleFamily?: T;
+        googleWeights?: T;
+        customFile?: T;
+      };
+  accent?:
+    | T
+    | {
+        source?: T;
+        googleFamily?: T;
+        googleWeights?: T;
+        customFile?: T;
+      };
+  shape?:
+    | T
+    | {
+        radiusSm?: T;
+        radiusMd?: T;
+        radiusLg?: T;
+        radiusXl?: T;
+      };
+  layout?:
+    | T
+    | {
+        mobile?:
+          | T
+          | {
+              contentWidth?: T;
+              maxWidth?: T;
+              paddingX?: T;
+            };
+        tablet?:
+          | T
+          | {
+              contentWidth?: T;
+              maxWidth?: T;
+              paddingX?: T;
+            };
+        desktop?:
+          | T
+          | {
+              contentWidth?: T;
+              maxWidth?: T;
+              paddingX?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

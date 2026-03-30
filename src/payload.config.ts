@@ -9,9 +9,11 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Roles } from './collections/Roles'
+import { Fonts } from './collections/Fonts'
 import { Header } from './globals/Header'
 import { routing } from './i18n/routing'
 import { Footer } from './globals/Footer'
+import { ThemeSettings } from './globals/ThemeSettings'
 import { HeroBlock } from './blocks/Hero/config'
 import { MultiColumnBlock } from './blocks/MultiColumn/config'
 import { ImageWithTextBlock } from './blocks/ImageWithText/config'
@@ -27,8 +29,8 @@ export default buildConfig({
     },
   },
   blocks: [HeroBlock, ImageWithTextBlock, MultiColumnBlock],
-  collections: [Users, Roles, Media, Pages],
-  globals: [Header, Footer],
+  collections: [Users, Roles, Fonts, Media, Pages],
+  globals: [Header, Footer, ThemeSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   cors: [process.env.NEXT_PUBLIC_SERVER_URL || ''].filter(Boolean),
