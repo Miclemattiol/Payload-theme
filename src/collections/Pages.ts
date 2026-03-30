@@ -3,6 +3,7 @@ import { ImageWithTextBlock } from "@/blocks/ImageWithText/config";
 import { MultiColumnBlock } from "@/blocks/MultiColumn/config";
 import { CollectionConfig } from "payload";
 import { hasPermission } from "@/access/hasPermission";
+import { colorField } from "@/fields/ColorPicker";
 
 const toSlug = (value: string): string =>
   value
@@ -59,7 +60,8 @@ export const Pages: CollectionConfig = {
         ImageWithTextBlock,
         MultiColumnBlock
       ]
-    }  
+    }, 
+    colorField('color', 'Colore test')
   ],
   versions: {
     drafts: {
