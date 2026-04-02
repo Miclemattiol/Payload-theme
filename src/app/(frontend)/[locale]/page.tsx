@@ -1,26 +1,63 @@
-import { headers as getHeaders } from 'next/headers.js'
-import Image from 'next/image'
-import { getPayload } from 'payload'
-import React from 'react'
-import { fileURLToPath } from 'url'
-
+import { getPayload, TypedLocale } from 'payload'
 import config from '@/payload.config'
+import { notFound } from 'next/navigation'
+import { draftMode } from 'next/headers'
+import type { Metadata } from 'next'
+import { PageContent } from './[...slug]/PageContent'
+import { PageClient } from './[...slug]/PageClient'
 
-import { useTranslations } from 'next-intl' 
-import { getTranslations } from 'next-intl/server'
+export async function generateMetadata({
+  params: _params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const params = await _params
+  const payload = await getPayload({ config: await config })
 
-export default async function HomePage() {
-  const headers = await getHeaders()
-  const payloadConfig = await config
-  const payload = await getPayload({ config: payloadConfig })
-  const { user } = await payload.auth({ headers })
+  const { docs } = await payload.find({
+    collection: 'pages',
+    where: { slug: { equals: 'home' } },
+    locale: params.locale as TypedLocale,
+    depth: 1,
+    limit: 1,
+  })
 
-  const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
-  const t = await getTranslations('HomePage');
+  const page = docs[0]
+  if (!page) return {}
 
-  return (
-    <div className="home">
-      
-    </div>
-  )
+  const meta = (page as any).meta
+  return {
+    title: meta?.title ?? page.title,
+    description: meta?.description,
+    openGraph: {
+      images: meta?.image?.url ? [{ url: meta.image.url }] : [],
+    },
+  }
+}
+
+export default async function HomePage({
+  params: _params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const params = await _params
+  const { isEnabled: isDraft } = await draftMode()
+  const payload = await getPayload({ config: await config })
+
+  const { docs } = await payload.find({
+    collection: 'pages',
+    where: { slug: { equals: 'home' } },
+    locale: params.locale as TypedLocale,
+    draft: isDraft,
+    limit: 1,
+  })
+
+  if (!docs[0]) notFound()
+
+  const page = docs[0]
+
+  if (isDraft) {
+    return <PageClient initialData={page} />
+  }
+  return <PageContent page={page} />
 }

@@ -308,6 +308,14 @@ export interface Page {
   slug: string;
   content?: (HeroBlock | ImageWithTextBlock | MultiColumnBlock)[] | null;
   color?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -543,6 +551,13 @@ export interface PagesSelect<T extends boolean = true> {
         'multi-column'?: T | MultiColumnBlockSelect<T>;
       };
   color?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;

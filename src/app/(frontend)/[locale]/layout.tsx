@@ -27,8 +27,11 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   }
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{
+          __html: `try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch{}`
+        }} />
         {googleFontsUrl && (
           <link rel="stylesheet" href={googleFontsUrl} />
         )}

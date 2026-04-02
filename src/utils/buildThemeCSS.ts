@@ -123,9 +123,27 @@ export const buildThemeCSS = (theme: ThemeData): string => {
 
   const darkVars = colorVars(theme.colorsDark)
 
+  const baseStyles = `*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--color-text-primary);
+}
+
+code, pre, kbd, samp {
+  font-family: var(--font-mono);
+}`
+
   return [
     buildFontFaces(theme),
     `:root {\n${rootVars}\n}`,
-    darkVars && `@media (prefers-color-scheme: dark) {\n  :root {\n${darkVars}\n  }\n}`,
+    darkVars && `[data-theme="dark"] {\n${darkVars}\n}\n\n@media (prefers-color-scheme: dark) {\n  :root:not([data-theme="light"]) {\n${darkVars}\n  }\n}`,
+    baseStyles,
   ].filter(Boolean).join('\n\n')
 }

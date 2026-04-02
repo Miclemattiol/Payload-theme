@@ -2,11 +2,10 @@ import { getPayload } from 'payload'
 import config from '@/payload.config'
 import { routing } from '@/i18n/routing'
 import { draftMode } from 'next/headers'
-import { redirect } from 'next/navigation'
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = request.nextUrl
+  const { searchParams, origin } = request.nextUrl
   const slug = searchParams.get('slug') ?? 'home'
   const locale = searchParams.get('locale') ?? routing.defaultLocale
 
@@ -20,5 +19,5 @@ export async function GET(request: NextRequest) {
   const draft = await draftMode()
   draft.enable()
 
-  redirect(`/${locale}/${slug}`)
+  return NextResponse.redirect(`${origin}/${locale}/${slug}`)
 }

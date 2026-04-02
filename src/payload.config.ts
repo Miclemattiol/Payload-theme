@@ -1,5 +1,6 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { seoPlugin } from '@payloadcms/plugin-seo'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -42,7 +43,16 @@ export default buildConfig({
     url: process.env.DATABASE_URL || '',
   }),
   sharp,
-  plugins: [],
+  plugins: [
+    seoPlugin({
+      collections: ['pages'],
+      uploadsCollection: 'media',
+      generateTitle: ({ doc }) => `${(doc as any).title}`,
+      generateDescription: ({ doc }) => (doc as any).excerpt ?? '',
+      generateURL: ({ doc, locale }) =>
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/${locale}/${(doc as any).slug ?? ''}`,
+    }),
+  ],
   localization: {
     locales: [...routing.locales],
     defaultLocale: routing.defaultLocale,
