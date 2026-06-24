@@ -47,10 +47,13 @@ export default buildConfig({
     seoPlugin({
       collections: ['pages'],
       uploadsCollection: 'media',
-      generateTitle: ({ doc }) => `${(doc as any).title}`,
-      generateDescription: ({ doc }) => (doc as any).excerpt ?? '',
-      generateURL: ({ doc, locale }) =>
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/${locale}/${(doc as any).slug ?? ''}`,
+      generateTitle: ({ doc }) => (doc as { title?: string }).title ?? '',
+      generateURL: ({ doc, locale }) => {
+        const slug = (doc as { slug?: string }).slug
+        const localeCode = typeof locale === 'string' ? locale : (locale as any)?.code ?? 'it'
+        const path = slug === 'home' ? '' : `/${slug ?? ''}`
+        return `${process.env.NEXT_PUBLIC_SERVER_URL}/${localeCode}${path}`
+      },
     }),
   ],
   localization: {

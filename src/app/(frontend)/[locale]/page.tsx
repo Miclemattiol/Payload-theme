@@ -5,6 +5,7 @@ import { draftMode } from 'next/headers'
 import type { Metadata } from 'next'
 import { PageContent } from './[...slug]/PageContent'
 import { PageClient } from './[...slug]/PageClient'
+import { buildPageMetadata } from '@/utils/pageMetadata'
 
 export async function generateMetadata({
   params: _params,
@@ -25,14 +26,7 @@ export async function generateMetadata({
   const page = docs[0]
   if (!page) return {}
 
-  const meta = (page as any).meta
-  return {
-    title: meta?.title ?? page.title,
-    description: meta?.description,
-    openGraph: {
-      images: meta?.image?.url ? [{ url: meta.image.url }] : [],
-    },
-  }
+  return buildPageMetadata(page, params.locale)
 }
 
 export default async function HomePage({
