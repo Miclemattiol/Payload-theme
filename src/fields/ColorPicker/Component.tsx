@@ -2,7 +2,7 @@
 
 import { useField, FieldLabel } from '@payloadcms/ui'
 import { HexAlphaColorPicker } from 'react-colorful'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import type { TextFieldClientProps } from 'payload'
 
 export const ColorPickerComponent: React.FC<TextFieldClientProps> = ({ field, path }) => {
@@ -10,10 +10,21 @@ export const ColorPickerComponent: React.FC<TextFieldClientProps> = ({ field, pa
   const [localColor, setLocalColor] = useState<string>(value ?? '#ffffffff')
   const [isOpen, setIsOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   useEffect(() => {
     if (value) setLocalColor(value)
   }, [value])
+
+  const handlePickerChange = useCallback((color: string) => {
+    setLocalColor(color)
+    clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => setValue(color), 150)
+  }, [setValue])
+
+  useEffect(() => {
+    return () => clearTimeout(debounceRef.current)
+  }, [])
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -63,7 +74,7 @@ export const ColorPickerComponent: React.FC<TextFieldClientProps> = ({ field, pa
         <div style={{ position: 'absolute', zIndex: 100, marginTop: 4 }}>
           <HexAlphaColorPicker
             color={localColor}
-            onChange={(color: string) => { setLocalColor(color); setValue(color) }}
+            onChange={handlePickerChange}
           />
         </div>
       )}
