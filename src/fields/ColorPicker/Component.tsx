@@ -12,7 +12,7 @@ export const ColorPickerComponent: React.FC<TextFieldClientProps> = ({ field, pa
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (value && value !== localColor) setLocalColor(value)
+    if (value) setLocalColor(value)
   }, [value])
 
   useEffect(() => {
