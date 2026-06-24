@@ -24,7 +24,7 @@ export const hasPermission = (collectionSlug: string, operation: Operation): Acc
     return roles.some((role: any) =>
       role.permissions?.some(
         (perm: any) =>
-          perm.collection === collectionSlug &&
+          perm.resource === collectionSlug &&
           perm.operations?.includes(operation),
       ),
     )

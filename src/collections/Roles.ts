@@ -41,7 +41,7 @@ export const Roles: CollectionConfig = {
       type: 'array',
       fields: [
         {
-          name: 'collection',
+          name: 'resource',
           type: 'select',
           options: COLLECTION_OPTIONS,
           required: true,
