@@ -19,5 +19,6 @@ export async function GET(request: NextRequest) {
   const draft = await draftMode()
   draft.enable()
 
-  return NextResponse.redirect(`${origin}/${locale}/${slug}`)
+  const path = slug === 'home' ? `/${locale}` : `/${locale}/${slug}`
+  return NextResponse.redirect(`${origin}${path}`)
 }

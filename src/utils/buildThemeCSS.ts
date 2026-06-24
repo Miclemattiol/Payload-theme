@@ -98,7 +98,7 @@ export const buildFontFaces = (theme: ThemeData): string => {
 const layoutVars = (bp: LayoutBreakpoint | undefined, name: string): string => {
   if (!bp) return ''
   return [
-    bp.maxWidth  && `  --max-width-${name}: ${bp.contentWidth === 'centered' ? bp.maxWidth : 'none'}px;`,
+    bp.maxWidth  && `  --max-width-${name}: ${bp.contentWidth === 'centered' ? `${bp.maxWidth}px` : 'none'};`,
     bp.paddingX !== undefined && `  --padding-x-${name}: ${bp.paddingX}px;`,
   ].filter(Boolean).join('\n')
 }
