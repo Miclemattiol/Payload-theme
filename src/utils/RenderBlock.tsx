@@ -5,15 +5,14 @@ import type { Page } from '@/payload-types'
 
 type Block = NonNullable<Page['content']>[number]
 
+const blockRegistry: Record<string, React.ComponentType<any>> = {
+  'hero': Hero,
+  'image-with-text': ImageWithText,
+  'multi-column': MultiColumn,
+}
+
 export const RenderBlock = ({ block }: { block: Block }) => {
-  switch (block.blockType) {
-    case 'hero':
-      return <Hero {...block} />
-    case 'image-with-text':
-      return <ImageWithText {...block} />
-    case 'multi-column':
-      return <MultiColumn {...block} />
-    default:
-      return null
-  }
+  const Component = blockRegistry[block.blockType]
+  if (!Component) return null
+  return <Component {...block} />
 }

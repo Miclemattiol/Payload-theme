@@ -9,6 +9,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { ThemeLiveSync } from '@/components/ThemeLiveSync'
 import type { Metadata } from 'next'
+import type { Header as HeaderType, Footer as FooterType, ThemeSetting } from '@/payload-types'
 
 export const metadata: Metadata = {
   title: { template: '%s', default: '' },
@@ -23,9 +24,9 @@ export default async function RootLayout(props: {
 
   let themeCSS = ''
   let googleFontsUrl: string | null = null
-  let headerData = null
-  let footerData = null
-  let themeData: any = null
+  let headerData: HeaderType | null = null
+  let footerData: FooterType | null = null
+  let themeData: ThemeSetting | null = null
 
   try {
     const payload = await getPayload({ config: await config })
@@ -34,11 +35,11 @@ export default async function RootLayout(props: {
       payload.findGlobal({ slug: 'header', depth: 1 }),
       payload.findGlobal({ slug: 'footer', depth: 1 }),
     ])
-    themeData = theme
+    themeData = theme as ThemeSetting
     themeCSS = buildThemeCSS(theme as any)
     googleFontsUrl = buildGoogleFontsUrl(theme as any)
-    headerData = header
-    footerData = footer
+    headerData = header as HeaderType
+    footerData = footer as FooterType
   } catch {
     // globals not yet configured
   }
@@ -55,13 +56,13 @@ export default async function RootLayout(props: {
       <body>
         <RefreshRouteOnSave />
         {themeData && <ThemeLiveSync initialData={themeData} />}
-        {headerData && <Header header={headerData as any} locale={locale} />}
+        {headerData && <Header header={headerData} locale={locale} />}
         <NextIntlClientProvider>
           <main>
             {children}
           </main>
         </NextIntlClientProvider>
-        {footerData && <Footer footer={footerData as any} locale={locale} />}
+        {footerData && <Footer footer={footerData} locale={locale} />}
       </body>
     </html>
   )
