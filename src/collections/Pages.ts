@@ -3,6 +3,7 @@ import { ImageWithTextBlock } from "@/blocks/ImageWithText/config";
 import { MultiColumnBlock } from "@/blocks/MultiColumn/config";
 import { CollectionConfig } from "payload";
 import { hasPermission } from "@/access/hasPermission";
+import { revalidatePage } from "@/utils/revalidate";
 
 const toSlug = (value: string): string =>
   value
@@ -22,6 +23,17 @@ export const Pages: CollectionConfig = {
           data.slug = toSlug(data.title)
         }
         return data
+      },
+    ],
+    afterChange: [
+      ({ doc }) => {
+        if (doc._status !== 'published') return
+        revalidatePage(doc.slug)
+      },
+    ],
+    afterDelete: [
+      ({ doc }) => {
+        revalidatePage(doc.slug)
       },
     ],
   },

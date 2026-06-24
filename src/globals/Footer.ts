@@ -1,12 +1,16 @@
 import type { GlobalConfig } from 'payload'
 import { hasPermission } from '@/access/hasPermission'
 import { linkFields } from '@/fields/link'
+import { revalidateAllPages } from '@/utils/revalidate'
 
 export const Footer: GlobalConfig = {
   slug: 'footer',
   access: {
     read: () => true,
     update: hasPermission('footer', 'update'),
+  },
+  hooks: {
+    afterChange: [() => revalidateAllPages()],
   },
   fields: [
     {

@@ -3,6 +3,7 @@ import { isAdmin } from '@/access/isAdmin'
 import { hasPermission } from '@/access/hasPermission'
 import { colorField } from '@/fields/ColorPicker'
 import { fontSlot } from '@/fields/fontSlot'
+import { revalidateAllPages } from '@/utils/revalidate'
 
 const colorGroup = (name: string, label: string): Field => ({
   name,
@@ -62,6 +63,9 @@ export const ThemeSettings: GlobalConfig = {
     livePreview: {
       url: `${process.env.NEXT_PUBLIC_SERVER_URL}/it`,
     },
+  },
+  hooks: {
+    afterChange: [() => revalidateAllPages()],
   },
   fields: [
     {
