@@ -2,7 +2,7 @@
 
 import { useLivePreview } from '@payloadcms/live-preview-react'
 import { useEffect } from 'react'
-import { buildThemeCSS } from '@/utils/buildThemeCSS'
+import { buildThemeCSS, buildGoogleFontsUrl } from '@/utils/buildThemeCSS'
 
 export function ThemeLiveSync({ initialData }: { initialData: any }) {
   const { data } = useLivePreview({
@@ -12,14 +12,30 @@ export function ThemeLiveSync({ initialData }: { initialData: any }) {
   })
 
   useEffect(() => {
+    // CSS vars
     const css = buildThemeCSS(data as any)
-    let el = document.getElementById('theme-live-css') as HTMLStyleElement | null
-    if (!el) {
-      el = document.createElement('style')
-      el.id = 'theme-live-css'
-      document.head.appendChild(el)
+    let styleEl = document.getElementById('theme-live-css') as HTMLStyleElement | null
+    if (!styleEl) {
+      styleEl = document.createElement('style')
+      styleEl.id = 'theme-live-css'
+      document.head.appendChild(styleEl)
     }
-    el.textContent = css
+    styleEl.textContent = css
+
+    // Google Fonts link
+    const fontsUrl = buildGoogleFontsUrl(data as any)
+    let linkEl = document.getElementById('theme-live-fonts') as HTMLLinkElement | null
+    if (fontsUrl) {
+      if (!linkEl) {
+        linkEl = document.createElement('link')
+        linkEl.id = 'theme-live-fonts'
+        linkEl.rel = 'stylesheet'
+        document.head.appendChild(linkEl)
+      }
+      if (linkEl.href !== fontsUrl) linkEl.href = fontsUrl
+    } else if (linkEl) {
+      linkEl.remove()
+    }
   }, [data])
 
   return null

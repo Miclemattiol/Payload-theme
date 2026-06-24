@@ -50,7 +50,13 @@ export default async function RootLayout(props: {
         <script dangerouslySetInnerHTML={{
           __html: `try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch{}`
         }} />
-        {googleFontsUrl && <link rel="stylesheet" href={googleFontsUrl} />}
+        {googleFontsUrl && (
+          <>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+            <link rel="stylesheet" href={googleFontsUrl} />
+          </>
+        )}
         {themeCSS && <style>{themeCSS}</style>}
       </head>
       <body>
