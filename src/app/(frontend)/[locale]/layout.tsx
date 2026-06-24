@@ -7,6 +7,7 @@ import config from '@/payload.config'
 import { buildThemeCSS, buildGoogleFontsUrl } from '@/utils/buildThemeCSS'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import { ThemeLiveSync } from '@/components/ThemeLiveSync'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -24,6 +25,7 @@ export default async function RootLayout(props: {
   let googleFontsUrl: string | null = null
   let headerData = null
   let footerData = null
+  let themeData: any = null
 
   try {
     const payload = await getPayload({ config: await config })
@@ -32,6 +34,7 @@ export default async function RootLayout(props: {
       payload.findGlobal({ slug: 'header', depth: 1 }),
       payload.findGlobal({ slug: 'footer', depth: 1 }),
     ])
+    themeData = theme
     themeCSS = buildThemeCSS(theme as any)
     googleFontsUrl = buildGoogleFontsUrl(theme as any)
     headerData = header
@@ -51,6 +54,7 @@ export default async function RootLayout(props: {
       </head>
       <body>
         <RefreshRouteOnSave />
+        {themeData && <ThemeLiveSync initialData={themeData} />}
         {headerData && <Header header={headerData as any} locale={locale} />}
         <NextIntlClientProvider>
           <main>

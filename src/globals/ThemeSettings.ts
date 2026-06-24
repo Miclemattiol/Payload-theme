@@ -58,6 +58,11 @@ export const ThemeSettings: GlobalConfig = {
     read: () => true,
     update: hasPermission('theme-settings', 'update'),
   },
+  admin: {
+    livePreview: {
+      url: `${process.env.NEXT_PUBLIC_SERVER_URL}/it`,
+    },
+  },
   fields: [
     {
       type: 'tabs',
