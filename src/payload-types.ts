@@ -271,7 +271,7 @@ export interface Role {
   name: string;
   permissions?:
     | {
-        collection: 'admin-panel' | 'pages' | 'media' | 'fonts' | 'users' | 'header' | 'footer' | 'theme-settings';
+        resource: 'admin-panel' | 'pages' | 'media' | 'fonts' | 'users' | 'header' | 'footer' | 'theme-settings';
         operations: ('read' | 'create' | 'update' | 'delete')[];
         id?: string | null;
       }[]
@@ -307,7 +307,6 @@ export interface Page {
   title: string;
   slug: string;
   content?: (HeroBlock | ImageWithTextBlock | MultiColumnBlock)[] | null;
-  color?: string | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -439,7 +438,7 @@ export interface RolesSelect<T extends boolean = true> {
   permissions?:
     | T
     | {
-        collection?: T;
+        resource?: T;
         operations?: T;
         id?: T;
       };
@@ -550,7 +549,6 @@ export interface PagesSelect<T extends boolean = true> {
         'image-with-text'?: T | ImageWithTextBlockSelect<T>;
         'multi-column'?: T | MultiColumnBlockSelect<T>;
       };
-  color?: T;
   meta?:
     | T
     | {
@@ -648,6 +646,17 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Header {
   id: string;
+  logo?: (string | null) | Media;
+  nav?:
+    | {
+        label: string;
+        linkType?: ('internal' | 'external') | null;
+        page?: (string | null) | Page;
+        url?: string | null;
+        newTab?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -657,6 +666,30 @@ export interface Header {
  */
 export interface Footer {
   id: string;
+  columns?:
+    | {
+        title?: string | null;
+        links?:
+          | {
+              label: string;
+              linkType?: ('internal' | 'external') | null;
+              page?: (string | null) | Page;
+              url?: string | null;
+              newTab?: boolean | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  socialLinks?:
+    | {
+        platform: 'instagram' | 'x' | 'facebook' | 'linkedin' | 'youtube' | 'github' | 'tiktok';
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  copyright?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -745,6 +778,17 @@ export interface ThemeSetting {
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
+  logo?: T;
+  nav?:
+    | T
+    | {
+        label?: T;
+        linkType?: T;
+        page?: T;
+        url?: T;
+        newTab?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -754,6 +798,30 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
+  columns?:
+    | T
+    | {
+        title?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              linkType?: T;
+              page?: T;
+              url?: T;
+              newTab?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  socialLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  copyright?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
