@@ -1,24 +1,6 @@
 import type { GlobalConfig, Field } from 'payload'
-import { isAdmin } from '@/access/isAdmin'
 import { hasPermission } from '@/access/hasPermission'
-import { colorField } from '@/fields/ColorPicker'
-import { fontSlot } from '@/fields/fontSlot'
 import { revalidateAllPages } from '@/utils/revalidate'
-
-const colorGroup = (name: string, label: string): Field => ({
-  name,
-  type: 'group',
-  label,
-  fields: [
-    colorField('primary', 'Primario'),
-    colorField('secondary', 'Secondario'),
-    colorField('background', 'Sfondo'),
-    colorField('surface', 'Superficie'),
-    colorField('textPrimary', 'Testo principale'),
-    colorField('textSecondary', 'Testo secondario'),
-    colorField('border', 'Bordo'),
-  ],
-})
 
 const layoutBreakpoint = (name: string, label: string, defaultPaddingX: number): Field => ({
   name,
@@ -61,7 +43,7 @@ export const ThemeSettings: GlobalConfig = {
   },
   admin: {
     livePreview: {
-      url: `${process.env.NEXT_PUBLIC_SERVER_URL}/it`,
+      url: () => `${process.env.NEXT_PUBLIC_SERVER_URL}/it`,
     },
   },
   hooks: {
@@ -69,56 +51,13 @@ export const ThemeSettings: GlobalConfig = {
   },
   fields: [
     {
-      type: 'tabs',
-      tabs: [
-        {
-          label: 'Colori',
-          fields: [
-            colorGroup('colorsLight', 'Modalità chiara'),
-            colorGroup('colorsDark', 'Modalità scura'),
-          ],
-        },
-        {
-          label: 'Tipografia',
-          fields: [
-            fontSlot('heading', 'Heading'),
-            fontSlot('body', 'Body'),
-            fontSlot('display', 'Display'),
-            fontSlot('mono', 'Mono'),
-            fontSlot('accent', 'Accent'),
-          ],
-        },
-        {
-          label: 'Forma',
-          fields: [
-            {
-              name: 'shape',
-              type: 'group',
-              label: 'Border radius',
-              fields: [
-                { name: 'radiusSm', type: 'number', label: 'SM — badge, tag (px)', defaultValue: 4 },
-                { name: 'radiusMd', type: 'number', label: 'MD — bottoni, input (px)', defaultValue: 8 },
-                { name: 'radiusLg', type: 'number', label: 'LG — card, pannelli (px)', defaultValue: 16 },
-                { name: 'radiusXl', type: 'number', label: 'XL — sezioni, modal (px)', defaultValue: 24 },
-              ],
-            },
-          ],
-        },
-        {
-          label: 'Layout',
-          fields: [
-            {
-              name: 'layout',
-              type: 'group',
-              label: 'Layout',
-              fields: [
-                layoutBreakpoint('mobile', 'Mobile', 16),
-                layoutBreakpoint('tablet', 'Tablet', 32),
-                layoutBreakpoint('desktop', 'Desktop', 48),
-              ],
-            },
-          ],
-        },
+      name: 'layout',
+      type: 'group',
+      label: 'Layout',
+      fields: [
+        layoutBreakpoint('mobile', 'Mobile', 16),
+        layoutBreakpoint('tablet', 'Tablet', 32),
+        layoutBreakpoint('desktop', 'Desktop', 48),
       ],
     },
   ],
