@@ -48,7 +48,7 @@ export default async function RootLayout(props: {
     <html lang={locale} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{
-          __html: `try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch{}`
+          __html: `try{var t=localStorage.getItem('site-theme');if(t)document.documentElement.dataset.theme=t}catch{}`
         }} />
         {googleFontsUrl && (
           <>

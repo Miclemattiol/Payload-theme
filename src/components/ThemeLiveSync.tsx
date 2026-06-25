@@ -12,7 +12,6 @@ export function ThemeLiveSync({ initialData }: { initialData: any }) {
   })
 
   useEffect(() => {
-    // CSS vars
     const css = buildThemeCSS(data as any)
     let styleEl = document.getElementById('theme-live-css') as HTMLStyleElement | null
     if (!styleEl) {
@@ -22,7 +21,6 @@ export function ThemeLiveSync({ initialData }: { initialData: any }) {
     }
     styleEl.textContent = css
 
-    // Google Fonts link
     const fontsUrl = buildGoogleFontsUrl(data as any)
     let linkEl = document.getElementById('theme-live-fonts') as HTMLLinkElement | null
     if (fontsUrl) {

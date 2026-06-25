@@ -8,17 +8,17 @@ export function ThemeSwitcher() {
   const [theme, setTheme] = useState<Theme | null>(null)
 
   useEffect(() => {
-    const saved = localStorage.getItem('theme') as Theme | null
+    const saved = localStorage.getItem('site-theme') as Theme | null
     setTheme(saved ?? 'system')
   }, [])
 
   const apply = (next: Theme) => {
     setTheme(next)
     if (next === 'system') {
-      localStorage.removeItem('theme')
+      localStorage.removeItem('site-theme')
       document.documentElement.removeAttribute('data-theme')
     } else {
-      localStorage.setItem('theme', next)
+      localStorage.setItem('site-theme', next)
       document.documentElement.dataset.theme = next
     }
   }
