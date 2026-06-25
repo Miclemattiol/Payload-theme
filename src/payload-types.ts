@@ -76,6 +76,7 @@ export interface Config {
     fonts: Font;
     media: Media;
     pages: Page;
+    styles: Style;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,6 +89,7 @@ export interface Config {
     fonts: FontsSelect<false> | FontsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
+    styles: StylesSelect<false> | StylesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -321,6 +323,78 @@ export interface Page {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "styles".
+ */
+export interface Style {
+  id: string;
+  name: string;
+  /**
+   * Usato come attributo CSS. Solo lettere minuscole, numeri e trattini.
+   */
+  slug: string;
+  /**
+   * Se attivo, questo stile viene applicato automaticamente senza bisogno di selezione.
+   */
+  isDefault?: boolean | null;
+  colorsLight?: {
+    primary?: string | null;
+    secondary?: string | null;
+    background?: string | null;
+    surface?: string | null;
+    textPrimary?: string | null;
+    textSecondary?: string | null;
+    border?: string | null;
+  };
+  colorsDark?: {
+    primary?: string | null;
+    secondary?: string | null;
+    background?: string | null;
+    surface?: string | null;
+    textPrimary?: string | null;
+    textSecondary?: string | null;
+    border?: string | null;
+  };
+  heading?: {
+    source?: ('google' | 'custom') | null;
+    googleFamily?: string | null;
+    googleWeights?: ('100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900')[] | null;
+    customFile?: (string | null) | Font;
+  };
+  body?: {
+    source?: ('google' | 'custom') | null;
+    googleFamily?: string | null;
+    googleWeights?: ('100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900')[] | null;
+    customFile?: (string | null) | Font;
+  };
+  display?: {
+    source?: ('google' | 'custom') | null;
+    googleFamily?: string | null;
+    googleWeights?: ('100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900')[] | null;
+    customFile?: (string | null) | Font;
+  };
+  mono?: {
+    source?: ('google' | 'custom') | null;
+    googleFamily?: string | null;
+    googleWeights?: ('100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900')[] | null;
+    customFile?: (string | null) | Font;
+  };
+  accent?: {
+    source?: ('google' | 'custom') | null;
+    googleFamily?: string | null;
+    googleWeights?: ('100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900')[] | null;
+    customFile?: (string | null) | Font;
+  };
+  shape?: {
+    radiusSm?: number | null;
+    radiusMd?: number | null;
+    radiusLg?: number | null;
+    radiusXl?: number | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -362,6 +436,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'pages';
         value: string | Page;
+      } | null)
+    | ({
+        relationTo: 'styles';
+        value: string | Style;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -602,6 +680,87 @@ export interface MultiColumnBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "styles_select".
+ */
+export interface StylesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  isDefault?: T;
+  colorsLight?:
+    | T
+    | {
+        primary?: T;
+        secondary?: T;
+        background?: T;
+        surface?: T;
+        textPrimary?: T;
+        textSecondary?: T;
+        border?: T;
+      };
+  colorsDark?:
+    | T
+    | {
+        primary?: T;
+        secondary?: T;
+        background?: T;
+        surface?: T;
+        textPrimary?: T;
+        textSecondary?: T;
+        border?: T;
+      };
+  heading?:
+    | T
+    | {
+        source?: T;
+        googleFamily?: T;
+        googleWeights?: T;
+        customFile?: T;
+      };
+  body?:
+    | T
+    | {
+        source?: T;
+        googleFamily?: T;
+        googleWeights?: T;
+        customFile?: T;
+      };
+  display?:
+    | T
+    | {
+        source?: T;
+        googleFamily?: T;
+        googleWeights?: T;
+        customFile?: T;
+      };
+  mono?:
+    | T
+    | {
+        source?: T;
+        googleFamily?: T;
+        googleWeights?: T;
+        customFile?: T;
+      };
+  accent?:
+    | T
+    | {
+        source?: T;
+        googleFamily?: T;
+        googleWeights?: T;
+        customFile?: T;
+      };
+  shape?:
+    | T
+    | {
+        radiusSm?: T;
+        radiusMd?: T;
+        radiusLg?: T;
+        radiusXl?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -699,60 +858,6 @@ export interface Footer {
  */
 export interface ThemeSetting {
   id: string;
-  colorsLight?: {
-    primary?: string | null;
-    secondary?: string | null;
-    background?: string | null;
-    surface?: string | null;
-    textPrimary?: string | null;
-    textSecondary?: string | null;
-    border?: string | null;
-  };
-  colorsDark?: {
-    primary?: string | null;
-    secondary?: string | null;
-    background?: string | null;
-    surface?: string | null;
-    textPrimary?: string | null;
-    textSecondary?: string | null;
-    border?: string | null;
-  };
-  heading?: {
-    source?: ('google' | 'custom') | null;
-    googleFamily?: string | null;
-    googleWeights?: ('100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900')[] | null;
-    customFile?: (string | null) | Font;
-  };
-  body?: {
-    source?: ('google' | 'custom') | null;
-    googleFamily?: string | null;
-    googleWeights?: ('100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900')[] | null;
-    customFile?: (string | null) | Font;
-  };
-  display?: {
-    source?: ('google' | 'custom') | null;
-    googleFamily?: string | null;
-    googleWeights?: ('100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900')[] | null;
-    customFile?: (string | null) | Font;
-  };
-  mono?: {
-    source?: ('google' | 'custom') | null;
-    googleFamily?: string | null;
-    googleWeights?: ('100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900')[] | null;
-    customFile?: (string | null) | Font;
-  };
-  accent?: {
-    source?: ('google' | 'custom') | null;
-    googleFamily?: string | null;
-    googleWeights?: ('100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900')[] | null;
-    customFile?: (string | null) | Font;
-  };
-  shape?: {
-    radiusSm?: number | null;
-    radiusMd?: number | null;
-    radiusLg?: number | null;
-    radiusXl?: number | null;
-  };
   layout?: {
     mobile?: {
       contentWidth?: ('full' | 'centered') | null;
@@ -831,76 +936,6 @@ export interface FooterSelect<T extends boolean = true> {
  * via the `definition` "theme-settings_select".
  */
 export interface ThemeSettingsSelect<T extends boolean = true> {
-  colorsLight?:
-    | T
-    | {
-        primary?: T;
-        secondary?: T;
-        background?: T;
-        surface?: T;
-        textPrimary?: T;
-        textSecondary?: T;
-        border?: T;
-      };
-  colorsDark?:
-    | T
-    | {
-        primary?: T;
-        secondary?: T;
-        background?: T;
-        surface?: T;
-        textPrimary?: T;
-        textSecondary?: T;
-        border?: T;
-      };
-  heading?:
-    | T
-    | {
-        source?: T;
-        googleFamily?: T;
-        googleWeights?: T;
-        customFile?: T;
-      };
-  body?:
-    | T
-    | {
-        source?: T;
-        googleFamily?: T;
-        googleWeights?: T;
-        customFile?: T;
-      };
-  display?:
-    | T
-    | {
-        source?: T;
-        googleFamily?: T;
-        googleWeights?: T;
-        customFile?: T;
-      };
-  mono?:
-    | T
-    | {
-        source?: T;
-        googleFamily?: T;
-        googleWeights?: T;
-        customFile?: T;
-      };
-  accent?:
-    | T
-    | {
-        source?: T;
-        googleFamily?: T;
-        googleWeights?: T;
-        customFile?: T;
-      };
-  shape?:
-    | T
-    | {
-        radiusSm?: T;
-        radiusMd?: T;
-        radiusLg?: T;
-        radiusXl?: T;
-      };
   layout?:
     | T
     | {

@@ -11,6 +11,7 @@ import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Roles } from './collections/Roles'
 import { Fonts } from './collections/Fonts'
+import { Styles } from './collections/Styles'
 import { Header } from './globals/Header'
 import { routing } from './i18n/routing'
 import { Footer } from './globals/Footer'
@@ -28,9 +29,16 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    livePreview: {
+      breakpoints: [
+        { label: 'Mobile', name: 'mobile', width: 375, height: 812 },
+        { label: 'Tablet', name: 'tablet', width: 768, height: 1024 },
+        { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },
+      ],
+    },
   },
   blocks: [HeroBlock, ImageWithTextBlock, MultiColumnBlock],
-  collections: [Users, Roles, Fonts, Media, Pages],
+  collections: [Users, Roles, Fonts, Media, Pages, Styles],
   globals: [Header, Footer, ThemeSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
@@ -61,11 +69,11 @@ export default buildConfig({
     defaultLocale: routing.defaultLocale,
   },
   onInit: async (payload) => {
-    const defaults = [
+    const defaultPages = [
       { title: 'Home', slug: 'home' },
       { title: 'Pagina non trovata', slug: '404' },
     ]
-    for (const page of defaults) {
+    for (const page of defaultPages) {
       const { docs } = await payload.find({
         collection: 'pages',
         where: { slug: { equals: page.slug } },
@@ -77,6 +85,21 @@ export default buildConfig({
           data: { ...page, _status: 'published' },
         })
       }
+    }
+
+    const { docs: existingStyles } = await payload.find({
+      collection: 'styles',
+      limit: 1,
+    })
+    if (existingStyles.length === 0) {
+      await payload.create({
+        collection: 'styles',
+        data: {
+          name: 'Default',
+          slug: 'default',
+          isDefault: true,
+        },
+      })
     }
   },
 })
