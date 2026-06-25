@@ -25,6 +25,14 @@ export const Pages: CollectionConfig = {
         return data
       },
     ],
+    beforeDelete: [
+      async ({ req, id }) => {
+        const doc = await req.payload.findByID({ collection: 'pages', id })
+        if (['home', '404'].includes(doc?.slug ?? '')) {
+          throw new Error(`La pagina "${doc.slug}" è protetta e non può essere eliminata`)
+        }
+      },
+    ],
     afterChange: [
       ({ doc }) => {
         if (doc._status !== 'published') return

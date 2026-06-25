@@ -59,5 +59,24 @@ export default buildConfig({
   localization: {
     locales: [...routing.locales],
     defaultLocale: routing.defaultLocale,
-  }
+  },
+  onInit: async (payload) => {
+    const defaults = [
+      { title: 'Home', slug: 'home' },
+      { title: 'Pagina non trovata', slug: '404' },
+    ]
+    for (const page of defaults) {
+      const { docs } = await payload.find({
+        collection: 'pages',
+        where: { slug: { equals: page.slug } },
+        limit: 1,
+      })
+      if (docs.length === 0) {
+        await payload.create({
+          collection: 'pages',
+          data: { ...page, _status: 'published' },
+        })
+      }
+    }
+  },
 })
