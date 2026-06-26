@@ -7,6 +7,23 @@ import { PageContent } from './PageContent'
 import { PageClient } from './PageClient'
 import { buildPageMetadata } from '@/utils/pageMetadata'
 
+type CrumbItem = { label: string; url: string }
+
+function buildBreadcrumbs(page: any, locale: string): CrumbItem[] {
+  const crumbs: CrumbItem[] = []
+  let current = page
+  while (current.parent && typeof current.parent === 'object') {
+    const p = current.parent
+    if (p.slug && p.slug !== 'home') {
+      crumbs.unshift({ label: p.title, url: `/${locale}/${p.slug}` })
+    } else if (p.slug === 'home') {
+      crumbs.unshift({ label: p.title, url: `/${locale}` })
+    }
+    current = p
+  }
+  return crumbs
+}
+
 export async function generateMetadata({
   params: _params,
 }: {
@@ -33,9 +50,9 @@ export async function generateMetadata({
 export default async function Page({
   params: _params,
 }: {
-  params: Promise<{ slug: string[], locale: string }>,
+  params: Promise<{ slug: string[]; locale: string }>
 }) {
-  const params = await _params;
+  const params = await _params
   const { isEnabled: isDraft } = await draftMode()
   const payload = await getPayload({ config: await config })
 
@@ -46,15 +63,17 @@ export default async function Page({
     where: { slug: { equals: slug } },
     locale: params.locale as TypedLocale,
     draft: isDraft,
+    depth: 2,
     limit: 1,
   })
 
   if (!docs[0]) notFound()
 
   const page = docs[0]
+  const breadcrumbs = buildBreadcrumbs(page, params.locale)
 
   if (isDraft) {
     return <PageClient initialData={page} />
   }
-  return <PageContent page={page} />
+  return <PageContent page={page} breadcrumbs={breadcrumbs} />
 }

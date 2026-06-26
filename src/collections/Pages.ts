@@ -18,9 +18,19 @@ export const Pages: CollectionConfig = {
   slug: "pages",
   hooks: {
     beforeValidate: [
-      ({ data }) => {
+      async ({ data, req }) => {
         if (data?.title && !data?.slug) {
           data.slug = toSlug(data.title)
+        }
+        // Auto-prefix slug with parent's slug when parent is set and slug has no slashes
+        if (data?.parent && data?.slug && !data.slug.includes('/')) {
+          try {
+            const parentId = typeof data.parent === 'object' ? (data.parent as any).id : data.parent
+            const parent = await req.payload.findByID({ collection: 'pages', id: parentId })
+            if (parent?.slug && parent.slug !== 'home') {
+              data.slug = `${parent.slug}/${data.slug}`
+            }
+          } catch {}
         }
         return data
       },
@@ -70,7 +80,20 @@ export const Pages: CollectionConfig = {
       type: "text",
       required: true,
       unique: true,
-    }, 
+      admin: {
+        description: 'Auto-generato dal titolo. Per pagine annidate viene prefissato automaticamente con lo slug del genitore.',
+      },
+    },
+    {
+      name: 'parent',
+      type: 'relationship',
+      relationTo: 'pages',
+      required: false,
+      admin: {
+        position: 'sidebar',
+        description: 'Pagina genitore per navigazione annidata e breadcrumb.',
+      },
+    },
     {
       name: "content",
       type: "blocks",

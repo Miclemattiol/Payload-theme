@@ -307,7 +307,14 @@ export interface Font {
 export interface Page {
   id: string;
   title: string;
+  /**
+   * Auto-generato dal titolo. Per pagine annidate viene prefissato automaticamente con lo slug del genitore.
+   */
   slug: string;
+  /**
+   * Pagina genitore per navigazione annidata e breadcrumb.
+   */
+  parent?: (string | null) | Page;
   content?: (HeroBlock | ImageWithTextBlock | MultiColumnBlock)[] | null;
   meta?: {
     title?: string | null;
@@ -620,6 +627,7 @@ export interface MediaSelect<T extends boolean = true> {
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
+  parent?: T;
   content?:
     | T
     | {
