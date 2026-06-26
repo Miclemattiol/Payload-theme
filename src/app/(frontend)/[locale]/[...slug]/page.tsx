@@ -6,6 +6,23 @@ import type { Metadata } from 'next'
 import { PageContent } from './PageContent'
 import { PageClient } from './PageClient'
 import { buildPageMetadata } from '@/utils/pageMetadata'
+import { routing } from '@/i18n/routing'
+
+export async function generateStaticParams() {
+  const payload = await getPayload({ config: await config })
+  const { docs } = await payload.find({
+    collection: 'pages',
+    where: { _status: { equals: 'published' } },
+    limit: 1000,
+    depth: 0,
+  })
+
+  return routing.locales.flatMap((locale) =>
+    docs
+      .filter((p) => p.slug !== 'home' && p.slug !== '404')
+      .map((p) => ({ locale, slug: p.slug.split('/') })),
+  )
+}
 
 type CrumbItem = { label: string; url: string }
 

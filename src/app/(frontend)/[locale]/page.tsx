@@ -6,6 +6,11 @@ import type { Metadata } from 'next'
 import { PageContent } from './[...slug]/PageContent'
 import { PageClient } from './[...slug]/PageClient'
 import { buildPageMetadata } from '@/utils/pageMetadata'
+import { routing } from '@/i18n/routing'
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
+}
 
 export async function generateMetadata({
   params: _params,
